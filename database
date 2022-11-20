@@ -1,0 +1,45 @@
+CREATE TABLE Author (
+    author_id   INTEGER PRIMARY KEY
+                        UNIQUE,
+    author_name TEXT    UNIQUE
+);
+
+CREATE TABLE Book (
+    book_id    INTEGER PRIMARY KEY
+                       UNIQUE,
+    book_name  TEXT,
+    book_genre INTEGER REFERENCES Genre (genre_id) ON DELETE RESTRICT
+                                                   ON UPDATE CASCADE,
+    book_stor          REFERENCES Storage (storage_id) ON DELETE RESTRICT
+                                                       ON UPDATE CASCADE
+);
+
+CREATE TABLE Genre (
+    genre_id   INTEGER PRIMARY KEY
+                       UNIQUE,
+    genre_name TEXT    UNIQUE
+);
+
+CREATE TABLE Relation (
+    book_id   INTEGER REFERENCES Book ON DELETE CASCADE
+                                      ON UPDATE CASCADE,
+    author_id INTEGER REFERENCES Author (author_id) ON DELETE CASCADE
+                                                    ON UPDATE CASCADE,
+    CONSTRAINT ak_relation UNIQUE (
+        book_id,
+        author_id
+    )
+);
+
+CREATE TABLE Storage (
+    storage_id   INTEGER PRIMARY KEY
+                         UNIQUE
+                         NOT NULL,
+    storage_name TEXT,
+    storage_link INTEGER REFERENCES Storage (storage_id) ON DELETE CASCADE
+                                                         ON UPDATE CASCADE,
+    CONSTRAINT ak_storage UNIQUE (
+        storage_name,
+        storage_link
+    )
+);
